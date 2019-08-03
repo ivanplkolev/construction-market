@@ -6,15 +6,23 @@ class Messenger extends React.Component {
     render() {
 
 
-        let myArray = this.props.messageslist;
+        let conversations = this.props.conversations;
 
-        const listItems = myArray.map((number) =>
-            <li key={number.toString()}>
-                {number}
-            </li>
+        const listItems = conversations.map((o) =>
+                <li key={o.id}>
+                    <div>
+                        <h5>{o.topic}</h5>
+                        <h6>{o.correspondent}</h6>
+
+                        <p>{o.messages[o.messages.length - 1].date} : {o.messages[o.messages.length - 1].content}</p>
+                    </div>
+                </li>
         );
         return (
-            <ul>{listItems}</ul>
+            <ul>
+                <ul>This are your messages</ul>
+                {listItems}
+            </ul>
         );
 
     }

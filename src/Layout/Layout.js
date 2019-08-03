@@ -5,6 +5,9 @@ import SearchBar from "../SearchBar/SearchBar";
 import Offers from "../Offers/Offers";
 import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
+import UserProfile from "../UserProfile/UserProfile";
+
+import MockupJSON from "../MockUps/MockupJSON.js";
 
 
 class Layout extends React.Component {
@@ -17,9 +20,9 @@ class Layout extends React.Component {
             showModalLogIn: false,
             showModalSignUp: false,
             searchField: '',
-            offersList: Array.from(Array(10).keys()),
-            eventsList: Array.from(Array(8).keys()),
-            messageslist: Array.from(Array(5).keys()),
+            mainContent: 'offers',
+            offersList: MockupJSON.foundOffers,
+            loadedUser: MockupJSON.loadedUser,
             loggedUser: {
                 name: '',
                 email: '',
@@ -29,6 +32,9 @@ class Layout extends React.Component {
         this.updateState = this.updateState.bind(this);
         this.logIn = this.logIn.bind(this);
         this.logOut = this.logOut.bind(this);
+        this.openMessenger = this.openMessenger.bind(this);
+        this.openMyProfile = this.openMyProfile.bind(this);
+        this.openSearchOffers = this.openSearchOffers.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.openLogInModal = this.openLogInModal.bind(this);
         this.openSignUpModal = this.openSignUpModal.bind(this);
@@ -37,7 +43,9 @@ class Layout extends React.Component {
         this.handleUserPassChange = this.handleUserPassChange.bind(this);
         this.handleSearchFieldChange = this.handleSearchFieldChange.bind(this);
         this.performSearch = this.performSearch.bind(this);
-    };
+    }
+
+;
 
     updateState() {
         this.setState({data: 'Data updated from the child component...'})
@@ -68,7 +76,9 @@ class Layout extends React.Component {
                 password: ''
             }
         });
-    };
+    }
+
+;
 
     hideModal = () => {
         this.setState({showModalLogin: false});
@@ -126,13 +136,53 @@ class Layout extends React.Component {
             return;
         }
 
-        let newOffersList = this.state.offersList;
-        this.state.offersList.push(value);
+        let newOffersList = [...this.state.offersList];
+        newOffersList = newOffersList.concat(this.state.offersList);
         this.setState({offersList: newOffersList});
         this.setState({searchField: ''});
     };
 
+    openMessenger = () => {
+        this.setState({mainContent: 'messenger'});
+    };
+
+    openMyProfile = () => {
+        this.setState({mainContent: 'profile'});
+    };
+
+
+    openSearchOffers = () => {
+        this.setState({mainContent: 'offers'});
+    };
+
+
     render() {
+        let mainContentTd;
+        let leftSideContent;
+
+        if (this.state.mainContent === 'offers') {
+            mainContentTd = <td className="main-content">
+                <SearchBar searchField={this.state.searchField}
+                           handleSearchFieldChange={this.handleSearchFieldChange}
+                           performSearch={this.performSearch}/>
+
+                <Offers offerList={this.state.offersList}/>
+            </td>
+        } else if (this.state.mainContent === 'messenger') {
+            mainContentTd = <td>
+                <Messenger conversations={this.state.loadedUser.conversations}/>
+            </td>
+        } else if (this.state.mainContent === 'profile') {
+            mainContentTd = <td>
+                <UserProfile loadedUser={this.state.loadedUser}/>
+            </td>;
+        }
+
+        if (this.state.isLoggedIn || true) {
+            leftSideContent = <td>
+                <Events loadedUser={this.state.loadedUser}/>
+            </td>;
+        }
 
         return (
             <div>
@@ -141,6 +191,9 @@ class Layout extends React.Component {
                                openLogInModal={this.openLogInModal}
                                openSignUpModal={this.openSignUpModal}
                                logOut={this.logOut}
+                               openMessenger={this.openMessenger}
+                               openMyProfile={this.openMyProfile}
+                               openSearchOffers={this.openSearchOffers}
                                loggedUser={this.state.loggedUser}
                                isLoggedIn={this.state.isLoggedIn}/>
 
@@ -154,25 +207,12 @@ class Layout extends React.Component {
                             handleClose={this.hideModal}/>
 
                 <table>
+                    <tbody>
                     <tr>
-                        <td className="main-content">
-                            <SearchBar searchField={this.state.searchField}
-                                       handleSearchFieldChange={this.handleSearchFieldChange}
-                                       performSearch={this.performSearch}/>
-
-                            <Offers offerList={this.state.offersList}/>
-                        </td>
-                        <td>
-                            <Offers offerList={this.state.offersList}/>
-                        </td>
-                        <td>
-                            <Messenger messageslist={this.state.messageslist}/>
-                        </td>
-
-                        <td>
-                            <Events eventsList={this.state.eventsList}/>
-                        </td>
+                        {mainContentTd}
+                        {leftSideContent}
                     </tr>
+                    </tbody>
                 </table>
             </div>
         );

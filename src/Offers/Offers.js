@@ -6,15 +6,40 @@ class Offers extends React.Component {
     render() {
 
 
-        let myArray = this.props.offerList;
+        let offersList = this.props.offerList;
 
-        const listItems = myArray.map((number) =>
-            <li key={number.toString()}>
-                {number}
-            </li>
+        const listItems = offersList.map((o) =>
+                <div key={o.id}>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td rowSpan="2">
+                                <img src={o.image} alt="MyImage"/>
+
+                            </td>
+                            <td >
+                                {o.name}
+                            </td>
+                            <td >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                {o.description}
+                            </td>
+                            <td >
+                                {o.price}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
         );
         return (
-            <ul>{listItems}</ul>
+            <div>
+                <h5> Here are the found offers</h5>
+                {listItems}
+            </div>
         );
 
     }
