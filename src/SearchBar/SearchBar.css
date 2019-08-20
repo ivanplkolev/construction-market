@@ -1,0 +1,25 @@
+
+.categoryDiv{
+
+
+
+}
+
+.textInput {
+
+    width: 80px;
+}
+
+.inpuCell {
+
+    width: 50%;
+    /*background: red;*/
+    margin: 10px;
+    text-align: center;
+}
+
+.inpuTable{
+
+    width:100%;
+    /*background: blanchedalmond;*/
+}

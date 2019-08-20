@@ -1,0 +1,31 @@
+
+.calendar {
+    /*width: 100%;*/
+
+    /*background: red;*/
+    text-align: center;
+
+}
+
+.calendarContent {
+
+    /*border: 1px solid black;*/
+
+    display: inline-table;
+
+
+}
+
+.week-day {
+
+}
+
+.today {
+
+    border: 2px solid black;
+}
+
+.hasEvent {
+    background: yellow;
+
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import ModalLogIn from '../ModalLogIn/ModalLogIn';
-import SearchBar from "../SearchBar/SearchBar";
-import Offers from "../Offers/Offers";
+import SearchPage from "../SearchPage/SearchPage";
 import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
 import UserProfile from "../UserProfile/UserProfile";
+import './Layout.css';
 
 import MockupJSON from "../MockUps/MockupJSON.js";
 
@@ -19,9 +19,7 @@ class Layout extends React.Component {
             isLoggedIn: false,
             showModalLogIn: false,
             showModalSignUp: false,
-            searchField: '',
             mainContent: 'offers',
-            offersList: MockupJSON.foundOffers,
             loadedUser: MockupJSON.loadedUser,
             loggedUser: {
                 name: '',
@@ -41,8 +39,6 @@ class Layout extends React.Component {
         this.handleUserNameChange = this.handleUserNameChange.bind(this);
         this.handleUserEmailChange = this.handleUserEmailChange.bind(this);
         this.handleUserPassChange = this.handleUserPassChange.bind(this);
-        this.handleSearchFieldChange = this.handleSearchFieldChange.bind(this);
-        this.performSearch = this.performSearch.bind(this);
     }
 
 ;
@@ -124,24 +120,6 @@ class Layout extends React.Component {
         });
     };
 
-    handleSearchFieldChange = (event) => {
-        const newSearchVal = event.target.value;
-        this.setState({searchField: newSearchVal});
-    };
-
-    performSearch = () => {
-        let value = this.state.searchField;
-
-        if (!value) {
-            return;
-        }
-
-        let newOffersList = [...this.state.offersList];
-        newOffersList = newOffersList.concat(this.state.offersList);
-        this.setState({offersList: newOffersList});
-        this.setState({searchField: ''});
-    };
-
     openMessenger = () => {
         this.setState({mainContent: 'messenger'});
     };
@@ -161,41 +139,31 @@ class Layout extends React.Component {
         let leftSideContent;
 
         if (this.state.mainContent === 'offers') {
-            mainContentTd = <td className="main-content">
-                <SearchBar searchField={this.state.searchField}
-                           handleSearchFieldChange={this.handleSearchFieldChange}
-                           performSearch={this.performSearch}/>
-
-                <Offers offerList={this.state.offersList}/>
-            </td>
+            mainContentTd = <SearchPage />
         } else if (this.state.mainContent === 'messenger') {
-            mainContentTd = <td>
-                <Messenger conversations={this.state.loadedUser.conversations}/>
-            </td>
+            mainContentTd = <Messenger conversations={this.state.loadedUser.conversations}/>
         } else if (this.state.mainContent === 'profile') {
-            mainContentTd = <td>
-                <UserProfile loadedUser={this.state.loadedUser}/>
-            </td>;
+            mainContentTd = <UserProfile loadedUser={this.state.loadedUser}/>;
         }
 
         if (this.state.isLoggedIn || true) {
-            leftSideContent = <td>
-                <Events loadedUser={this.state.loadedUser}/>
-            </td>;
+            leftSideContent = <Events loadedUser={this.state.loadedUser}/>;
         }
 
         return (
-            <div>
-                <NavigationBar myDataProp={this.state.data}
-                               updateStateProp={this.updateState}
-                               openLogInModal={this.openLogInModal}
-                               openSignUpModal={this.openSignUpModal}
-                               logOut={this.logOut}
-                               openMessenger={this.openMessenger}
-                               openMyProfile={this.openMyProfile}
-                               openSearchOffers={this.openSearchOffers}
-                               loggedUser={this.state.loggedUser}
-                               isLoggedIn={this.state.isLoggedIn}/>
+            <div >
+                <div class="navbar">
+                    <NavigationBar myDataProp={this.state.data}
+                                   updateStateProp={this.updateState}
+                                   openLogInModal={this.openLogInModal}
+                                   openSignUpModal={this.openSignUpModal}
+                                   logOut={this.logOut}
+                                   openMessenger={this.openMessenger}
+                                   openMyProfile={this.openMyProfile}
+                                   openSearchOffers={this.openSearchOffers}
+                                   loggedUser={this.state.loggedUser}
+                                   isLoggedIn={this.state.isLoggedIn}/>
+                </div>
 
                 <ModalLogIn showModalLogin={this.state.showModalLogin}
                             showModalSignUp={this.state.showModalSignUp}
@@ -206,15 +174,21 @@ class Layout extends React.Component {
                             logIn={this.logIn}
                             handleClose={this.hideModal}/>
 
-                <table>
+                <table class="container">
                     <tbody>
                     <tr>
-                        {mainContentTd}
-                        {leftSideContent}
+                        <td class="leftSide">
+                        </td>
+                        <td class="center">
+                            {mainContentTd}
+                        </td>
+                        <td class="rightSside">
+                            {leftSideContent}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-            </div>
+            </div >
         );
     }
 }

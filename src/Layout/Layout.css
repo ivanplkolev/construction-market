@@ -1,0 +1,36 @@
+.container {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+    /*background: #ffff4f;*/
+}
+
+.center {
+    width: 50%;
+
+    /*background: #333;*/
+}
+
+.leftSide {
+    width: 15%;
+
+    /*background: #b94a48;*/
+
+}
+.rightSide {
+    width: 35%;
+
+    /*background: #b94a48;*/
+
+}
+
+/*.navbar {*/
+    /*margin: 0 auto;*/
+    /*text-align: left;*/
+    /*width: 100%;*/
+    /*height: 60px;*/
+
+    /*background: #5E740B;*/
+/*}*/

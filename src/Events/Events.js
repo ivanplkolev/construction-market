@@ -9,19 +9,8 @@ class Events extends React.Component {
         let loadedUser = this.props.loadedUser;
 
         const projectEvents = loadedUser.projectRequests.flatMap(p => p.events);
-        //const projectEventsList = projectEvents.map((ev) =>
-        //        <li key={ev.id}>
-        //            {ev.date}
-        //        </li>
-        //);
 
         const offeringServices = loadedUser.offeringServices.flatMap(s => s.events);
-        //const offeringServicesList = offeringServices.map((ev) =>
-        //        <li key={ev.id}>
-        //            {ev.date}
-        //        </li>
-        //);
-
 
         const machinesForRentList = loadedUser.machinesForRent.map(m =>
                 <div>
@@ -31,13 +20,19 @@ class Events extends React.Component {
         );
 
         return (
-            <div>
-                <h5>My Projects</h5>
-                <Calendar events={projectEvents}/>
-                <h5>My Services</h5>
-                <Calendar events={offeringServices}/>
-                <h5>My Machines for rent</h5>
-                {machinesForRentList}
+            <div >
+                <div >
+                    <h5  >My Projects</h5>
+                    <Calendar events={projectEvents}/>
+                </div>
+                <div >
+                    <h5>My Services</h5>
+                    <Calendar events={offeringServices}/>
+                </div>
+                <div >
+                    <h5>My Machines for rent</h5>
+                    {machinesForRentList}
+                </div>
             </div>
         );
 

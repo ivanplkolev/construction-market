@@ -1,6 +1,7 @@
 import React from 'react';
 import './Offers.css';
 import OfferElement from '../OfferElement/OfferElement';
+import Agreement from '../Agreement/Agreement.js';
 
 class Offers extends React.Component {
     constructor(props) {

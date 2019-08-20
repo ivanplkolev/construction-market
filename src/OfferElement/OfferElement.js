@@ -21,26 +21,20 @@ class OfferElement extends React.Component {
         let offer = this.props.offer;
         return (
             <div key={offer.id}>
-                <table>
+                <table className="offerElement">
                     <tbody>
                     <tr>
                         <td rowSpan="2">
-                            <img src={offer.image} alt="MyImage"/>
-
+                            <img src={ require('../images/ni_small.jpg') }/>
                         </td>
                         <td >
-                            {offer.name}
+                            {offer.title}
                         </td>
                         <td >
+                            {offer.phoneNumber}
                         </td>
-                        <td>
-                            <button onClick={this.handleMakeAgreement}>Agreement</button>
-                        </td>
-                        <td>
-                            <button onClick={this.handleEdit}>Edit</button>
-                        </td>
-                        <td>
-                            <button onClick={this.handleDelete}>Delete</button>
+                        <td >
+                            <button  className="buttonCool" onClick={this.handleEdit}>Edit</button>
                         </td>
                     </tr>
                     <tr>
@@ -48,7 +42,10 @@ class OfferElement extends React.Component {
                             {offer.description}
                         </td>
                         <td >
-                            {offer.price}
+                            <button  className="buttonAgreement" onClick={this.handleMakeAgreement}>Agreement</button>
+                        </td>
+                        <td>
+                            <button className="buttonCool" onClick={this.handleDelete}>Delete</button>
                         </td>
                     </tr>
                     </tbody>
