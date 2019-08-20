@@ -10,7 +10,7 @@ class SearchBar extends React.Component {
         this.state = {
             searchType: '1',
             categoriesTree: '',
-            category: [],
+            searchCategory: [],// [13, 19, 111]position is level, value is value
             searchInputValue: '',
             searchParamMinValues: {},
             searchParamMaxValues: {},
@@ -54,25 +54,17 @@ class SearchBar extends React.Component {
         this.setState({searchInputValue: newSearchVal});
     };
 
-    handleCategoriesChange = (event) => {
-        const selectedField = event.target;
-        const selectedVal = selectedField.value;
-        const inputId = selectedField.id.replace('selectField_', '');
-
-        const oldCategory = this.state.category;
-
+    handleCategoriesChange = (level, selectedVal) => {
+        const oldCategory = this.state.searchCategory;
         const newCategory = [];
 
-        for (let i = 0; i < oldCategory.length; i++) {
-            if (oldCategory[i].key == inputId) {
-                break;
-            }
+        for (let i = 0; i < level; i++) {
             newCategory.push(oldCategory[i]);
         }
 
-        newCategory.push({"key": inputId, "value": selectedVal});
+        newCategory.push(selectedVal);
 
-        this.setState({category: newCategory});
+        this.setState({searchCategory: newCategory});
     };
 
     handleMinValueInputChange = (id, value) => {
@@ -102,7 +94,7 @@ class SearchBar extends React.Component {
 
         //construct search object
 
-        const category = this.state.category;
+        const searchCategory = this.state.searchCategory;
         const searchInputValue = this.state.searchInputValue;
         const searchParamMinValues = this.state.searchParamMinValues;
         const searchParamMaxValues = this.state.searchParamMaxValues;
@@ -113,12 +105,12 @@ class SearchBar extends React.Component {
 
         reqString += 'searchInput=' + searchInputValue;
 
-        if (category && category.length > 0) {
-            const catLen = category.length;
-            if (category[catLen - 1]) {
-                reqString += ('&cat=' + category[catLen - 1].value);
+        if (searchCategory && searchCategory.length > 0) {
+            const catLen = searchCategory.length;
+            if (searchCategory[catLen - 1]) {
+                reqString += ('&cat=' + searchCategory[catLen - 1]);
             } else if (catLen > 1) {
-                reqString += ('&cat=' + category[catLen - 2].value);
+                reqString += ('&cat=' + searchCategory[catLen - 2]);
             }
         }
 
@@ -138,53 +130,45 @@ class SearchBar extends React.Component {
         this.props.performSearch(reqString);
     };
 
-    renderSubCategoriesFields(category, selectedSubCategory) {
+    renderSubCategoriesFields(category, selectedSubCategory, level) {
         return <CategoryBar handleCategoriesChange={this.handleCategoriesChange}
                             handleMinValueInputChange={this.handleMinValueInputChange}
                             handleMaxValueInputChange={this.handleMaxValueInputChange}
                             handlePredefinedValueInputChange={this.handlePredefinedValueInputChange}
                             selectedSubCategory={selectedSubCategory}
+                            level={level}
                             category={category}/>;
     }
 
-    getSubCategoriesFields() {
+    getCategoriesFields() {
         if (!this.state.categoriesTree) {
             return [];
         }
 
         let renderedCategories = [];
-        let selectedCategories = this.state.category;
-        if (selectedCategories.length == 0) {
-            selectedCategories = [{"key": 12, "value": ''}];
-            this.setState({category: selectedCategories});
-        }
+        let selectedCategories = this.state.searchCategory;
+        let subCategoryToShow = this.state.categoriesTree;
 
-        let catToDisplay = this.state.categoriesTree;
-        let i = 1;
-        while (catToDisplay) {
+        renderedCategories.push(this.renderSubCategoriesFields(subCategoryToShow, selectedCategories[0], 0));
 
-            let hasSelectedSubCat = selectedCategories.length <= i + 1 && selectedCategories[i];
-            let selectedSubCat = hasSelectedSubCat ? selectedCategories[i].value : '';
+        const selectedCategiresSize = selectedCategories.length;
 
-            renderedCategories.push(this.renderSubCategoriesFields(catToDisplay, selectedSubCat));
-
-            if (selectedSubCat) {
-                let subCategories = catToDisplay._embedded ?
-                    catToDisplay._embedded.subcategories : catToDisplay.subcategires;
-                if (subCategories) {
-                    for (let j = 0; j < subCategories.length; j++) {
-                        if (subCategories[j].id == selectedSubCat) {
-                            catToDisplay = subCategories[j];
-                        }
-                    }
-                } else {
-                    catToDisplay = '';
+        for (let i = 0; i < selectedCategiresSize; i++) {
+            const hasSelectedSubCategory = selectedCategiresSize > i + 1;
+            const selectedSubcategoryId = hasSelectedSubCategory ? selectedCategories[i + 1] : '';
+            const selectedCategoryId = selectedCategories[i];
+            const subcategoriesList = subCategoryToShow._embedded ?
+                subCategoryToShow._embedded.subCategories : subCategoryToShow.subCategories;
+            for (let j = 0; j < subcategoriesList.length; j++) {
+                if (selectedCategoryId == subcategoriesList[j].id) {
+                    subCategoryToShow = subcategoriesList[j];
+                    break;
                 }
-            } else {
-                catToDisplay = '';
             }
-            i++;
+
+            renderedCategories.push(this.renderSubCategoriesFields(subCategoryToShow, selectedSubcategoryId, i + 1));
         }
+
         return renderedCategories;
     }
 
@@ -197,7 +181,7 @@ class SearchBar extends React.Component {
 
     render() {
         const categoriesDiv = <div>
-            {this.getSubCategoriesFields()}
+            {this.getCategoriesFields()}
         </div>;
 
         return (

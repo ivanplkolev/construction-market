@@ -30,7 +30,11 @@ class CategoryBar extends React.Component {
 
 
     handleCategoriesChange = (event) => {
-        this.props.handleCategoriesChange(event);
+
+        const selectedVal =  event.target.value;
+        const level =  event.target.id.replace('category_level_', '');
+
+        this.props.handleCategoriesChange(level, selectedVal);
     };
 
     handlePredefinedValueInputChange = (event) => {
@@ -65,7 +69,7 @@ class CategoryBar extends React.Component {
                 SubCategory:
                 <select value={this.props.selectedSubCategory}
                         onChange={this.handleCategoriesChange}
-                        id={'selectField_'+category.id}>
+                        id={'category_level_'+this.props.level}>
                     <option value="">All</option>
                     {optionList}
                 </select>
