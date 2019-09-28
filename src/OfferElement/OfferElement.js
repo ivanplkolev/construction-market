@@ -9,7 +9,21 @@ class OfferElement extends React.Component {
     };
 
     handleDelete = () => {
-        this.props.deleteOffer(this.props.offer);
+        //this.props.deleteOffer(this.props.offer);
+        const url = 'http://localhost:8080/api/offerEs/' + this.props.offer.id;
+        this.props.offer.deleted = true;
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.props.offer)
+        })
+            .then(window.location.reload())
+            .catch(function (error) {
+                console.log('Request failed', error)
+            });
     };
 
     handleMakeAgreement = () => {

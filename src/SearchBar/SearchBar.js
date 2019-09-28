@@ -1,6 +1,8 @@
 import React from 'react';
 import './SearchBar.css';
 import CategoryBar from './CategoryBar';
+import axios from 'axios'
+
 
 
 class SearchBar extends React.Component {
@@ -10,7 +12,7 @@ class SearchBar extends React.Component {
         this.state = {
             searchType: '1',
             categoriesTree: '',
-            searchCategory: [],// [13, 19, 111]position is level, value is value
+            searchCategory: [],
             searchInputValue: '',
             searchParamMinValues: {},
             searchParamMaxValues: {},
@@ -30,15 +32,9 @@ class SearchBar extends React.Component {
 
         let url = 'http://localhost:8080/api/categoryEs/search/findRoot?type=' + type;
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-            }
-        }).then(response => response.json())
-            .then(jsonData => {
-
-                this.setState({categoriesTree: jsonData});
+        axios.get(url)
+            .then((jsonData) => {
+                this.setState({categoriesTree: jsonData.data});
                 console.log(jsonData);
             }).catch(function (error) {
                 console.log('Request failed', error)

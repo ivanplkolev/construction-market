@@ -8,6 +8,11 @@ import './Calendar.css';
 export default class Calendar extends React.Component {
 
     render() {
+
+        if(!this.props.events){
+            return '';
+        }
+
         const now = new Date();
 
         const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();

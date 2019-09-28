@@ -2,6 +2,8 @@ import React from 'react';
 import './SearchPage.css';
 import Offers from "../Offers/Offers";
 import SearchBar from "../SearchBar/SearchBar";
+import axios from 'axios'
+
 
 
 class SearchPage extends React.Component {
@@ -18,17 +20,12 @@ class SearchPage extends React.Component {
 
     loadOffersFromServer(reqString) {
 
-        const url = 'http://localhost:8080/api/' + (reqString ? ('offersearch/?'+reqString) : 'offerEs');
+        const url = 'http://localhost:8080/api/' + (reqString ? ('offersearch/?'+reqString) : 'offerEs/search/findByDeleted?del=false');
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-            }
-        }).then(response => response.json())
-            .then(jsonData => {
+        axios.get(url)
+            .then((jsonData) => {
 
-                this.setState({offersList: jsonData._embedded.offerEs});
+                this.setState({offersList: jsonData.data._embedded.offerEs});
                 this.setState({searchField: ''});
                 //console.log(jsonStr);
             }).catch(function (error) {

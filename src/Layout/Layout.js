@@ -6,6 +6,10 @@ import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
 import UserProfile from "../UserProfile/UserProfile";
 import './Layout.css';
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+
+import AuthenticatedRoute from "../component/AuthenticatedRoute";
+
 
 import MockupJSON from "../MockUps/MockupJSON.js";
 
@@ -15,17 +19,17 @@ class Layout extends React.Component {
         super(props);
 
         this.state = {
-            data: 'Initial data...',
-            isLoggedIn: false,
-            showModalLogIn: false,
-            showModalSignUp: false,
-            mainContent: 'offers',
-            loadedUser: MockupJSON.loadedUser,
-            loggedUser: {
-                name: '',
-                email: '',
-                password: ''
-            }
+            //data: 'Initial data...',
+            //isLoggedIn: false,
+            //showModalLogIn: false,
+            //showModalSignUp: false,
+            //mainContent: 'offers',
+            //loadedUser: MockupJSON.loadedUser,
+            //loggedUser: {
+            //    name: '',
+            //    email: '',
+            //    password: ''
+            //}
         };
         this.updateState = this.updateState.bind(this);
         this.logIn = this.logIn.bind(this);
@@ -135,23 +139,23 @@ class Layout extends React.Component {
 
 
     render() {
-        let mainContentTd;
-        let leftSideContent;
+        //let mainContentTd;
+        //let leftSideContent;
 
-        if (this.state.mainContent === 'offers') {
-            mainContentTd = <SearchPage />
-        } else if (this.state.mainContent === 'messenger') {
-            mainContentTd = <Messenger conversations={this.state.loadedUser.conversations}/>
-        } else if (this.state.mainContent === 'profile') {
-            mainContentTd = <UserProfile loadedUser={this.state.loadedUser}/>;
-        }
+        //if (this.state.mainContent === 'offers') {
+        //    mainContentTd = <SearchPage />
+        //} else if (this.state.mainContent === 'messenger') {
+        //    mainContentTd = <Messenger conversations={this.state.loadedUser.conversations}/>
+        //} else if (this.state.mainContent === 'profile') {
+        //    mainContentTd = <UserProfile loadedUser={this.state.loadedUser}/>;
+        //}
 
-        if (this.state.isLoggedIn || true) {
-            leftSideContent = <Events loadedUser={this.state.loadedUser}/>;
-        }
+        //if (this.state.isLoggedIn || true) {
+        //    leftSideContent = <Events loadedUser={this.state.loadedUser}/>;
+        //}
 
         return (
-            <div >
+            <Router >
                 <div class="navbar">
                     <NavigationBar myDataProp={this.state.data}
                                    updateStateProp={this.updateState}
@@ -165,14 +169,6 @@ class Layout extends React.Component {
                                    isLoggedIn={this.state.isLoggedIn}/>
                 </div>
 
-                <ModalLogIn showModalLogin={this.state.showModalLogin}
-                            showModalSignUp={this.state.showModalSignUp}
-                            loggedUser={this.state.loggedUser}
-                            handleUserNameChange={this.handleUserNameChange}
-                            handleUserEmailChange={this.handleUserEmailChange}
-                            handleUserPassChange={this.handleUserPassChange}
-                            logIn={this.logIn}
-                            handleClose={this.hideModal}/>
 
                 <table class="container">
                     <tbody>
@@ -180,15 +176,21 @@ class Layout extends React.Component {
                         <td class="leftSide">
                         </td>
                         <td class="center">
-                            {mainContentTd}
+
+                            <Switch>
+                                <Route path="/" exact component={SearchPage} />
+                                <Route path="/login" exact component={ModalLogIn} />
+                                <AuthenticatedRoute path="/profile" exact component={UserProfile} />
+                            </Switch>
+
                         </td>
                         <td class="rightSside">
-                            {leftSideContent}
+                            <Events loadedUser={this.state.loadedUser}/>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-            </div >
+            </Router>
         );
     }
 }

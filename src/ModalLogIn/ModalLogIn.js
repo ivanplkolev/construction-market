@@ -1,44 +1,63 @@
-import React from 'react';
-import './ModalLogIn.css';
+import React, { Component } from 'react'
+import AuthenticationService from '../service/AuthenticationService';
 
-class ModalLogIn extends React.Component {
+class ModalLogIn extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username: 'in28minutes',
+            password: '',
+            hasLoginFailed: false,
+            showSuccessMessage: false
+        };
+
+        this.handleChange = this.handleChange.bind(this)
+        this.loginClicked = this.loginClicked.bind(this)
+        //this.createBasicAuthToken = this.createBasicAuthToken.bind(this)
+    }
+
+    handleChange(event) {
+        this.setState(
+            {
+                [event.target.name]
+                    : event.target.value
+            }
+        )
+    }
+
+    loginClicked() {
+        const username = this.state.username;
+        const password = this.state.password;
+
+         AuthenticationService
+             .executeJwtAuthenticationService(this.state.username, this.state.password)
+             .then((response) => {
+                 AuthenticationService.registerSuccessfulLoginForJwt(this.state.username, response.data.token)
+                 this.props.history.push(`/`)
+             }).catch(() => {
+                 this.setState({ showSuccessMessage: false })
+                 this.setState({ hasLoginFailed: true })
+             })
+
+    }
 
     render() {
-
-        const showHideClassName = (this.props.showModalLogin || this.props.showModalSignUp) ? "ModalLogIn display-block" : "ModalLogIn display-none";
-
-        const userName = this.props.showModalSignUp ? <label>
-            User Name:
-            <input type="text" value={this.props.loggedUser.name}
-                   onChange={this.props.handleUserNameChange}/>
-        </label> : "";
-
         return (
-            <div className={showHideClassName}>
-                <section className="modal-main">
-                    <p> This is paragraph in the modal</p>
-
-                    {userName}
-
-                    <label>
-                        User Email:
-                        <input type="text" value={this.props.loggedUser.email}
-                               onChange={this.props.handleUserEmailChange}/>
-                    </label>
-
-                    <label>
-                        Password:
-                        <input type="password" value={this.props.loggedUser.password}
-                               onChange={this.props.handleUserPassChange}/>
-                    </label>
-
-                    <button onClick={this.props.handleClose}>Close</button>
-                    <button onClick={this.props.logIn}>Log In</button>
-
-                </section>
+            <div>
+                <h1>Login</h1>
+                <div className="container">
+                    {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
+                    {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+                    {this.state.showSuccessMessage && <div>Login Sucessful</div>}
+                    {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
+                    User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+                    Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
+                    <button className="btn btn-success" onClick={this.loginClicked}>Login</button>
+                </div>
             </div>
-        );
-
+        )
     }
 }
 

@@ -8,6 +8,12 @@ class Events extends React.Component {
     render() {
         let loadedUser = this.props.loadedUser;
 
+
+
+        if(!loadedUser){
+            return '';
+        }
+
         const projectEvents = loadedUser.projectRequests.flatMap(p => p.events);
 
         const offeringServices = loadedUser.offeringServices.flatMap(s => s.events);
