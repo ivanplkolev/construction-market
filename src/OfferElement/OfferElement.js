@@ -48,7 +48,7 @@ class OfferElement extends React.Component {
                             {offer.phoneNumber}
                         </td>
                         <td >
-                            <button  className="buttonCool" onClick={this.handleEdit}>Edit</button>
+                            <button className="buttonCool" onClick={this.handleEdit}>Edit</button>
                         </td>
                     </tr>
                     <tr>
@@ -56,7 +56,7 @@ class OfferElement extends React.Component {
                             {offer.description}
                         </td>
                         <td >
-                            <button  className="buttonAgreement" onClick={this.handleMakeAgreement}>Agreement</button>
+                            <button className="buttonAgreement" onClick={this.handleMakeAgreement}>Agreement</button>
                         </td>
                         <td>
                             <button className="buttonCool" onClick={this.handleDelete}>Delete</button>

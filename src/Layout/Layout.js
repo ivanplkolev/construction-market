@@ -5,6 +5,7 @@ import SearchPage from "../SearchPage/SearchPage";
 import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
 import UserProfile from "../UserProfile/UserProfile";
+import OfferModal from "../OfferModal/OfferModal";
 import './Layout.css';
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -156,7 +157,7 @@ class Layout extends React.Component {
 
         return (
             <Router >
-                <div class="navbar">
+                <div className="navbar">
                     <NavigationBar myDataProp={this.state.data}
                                    updateStateProp={this.updateState}
                                    openLogInModal={this.openLogInModal}
@@ -181,6 +182,8 @@ class Layout extends React.Component {
                                 <Route path="/" exact component={SearchPage} />
                                 <Route path="/login" exact component={ModalLogIn} />
                                 <AuthenticatedRoute path="/profile" exact component={UserProfile} />
+                                <AuthenticatedRoute path="/createoffer" exact component={OfferModal} />
+                                <AuthenticatedRoute path="/editoffer" component={OfferModal} />
                             </Switch>
 
                         </td>

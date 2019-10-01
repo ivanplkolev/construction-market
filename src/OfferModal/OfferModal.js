@@ -1,81 +1,149 @@
 import React from 'react';
 import './OfferModal.css';
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 class OfferModal extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            offerForEdit: {}
+            offerForEdit: null
         };
+
+        this.loadOffer = this.loadOffer.bind(this)
+        this.saveOffer = this.saveOffer.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+
     }
 
 
     saveOffer = () => {
-        this.props.saveOfferModal(this.state.offer);
+        const url = 'http://localhost:8080/api/offerEs';
+
+        const offer = this.state.offerForEdit;
+        var postdata = new URLSearchParams();
+        postdata.append('offer', offer);
+
+        if (this.props.location.pathname == '/createoffer') {
+            return axios.post(url, offer);
+        } else {
+            return axios.put(url, JSON.stringify(this.props.offer));
+        }
     };
 
 
-    handleOfferNameChange = (event) => {
-        const userName = this.state.loggedUser.name;
-        const email = event.target.value;
-        const pass = this.state.loggedUser.password;
-        this.setState({
-            loggedUser: {
-                name: userName,
-                email: email,
-                password: pass
+    loadOffer(offerId) {
+        const url = 'http://localhost:8080/api/offerEs/search/findbyId?id=' + offerId;
+
+        axios.get(url)
+            .then((jsonData) => {
+                this.setState({offerForEdit: jsonData.data});
+                //console.log(jsonStr);
+            }).catch(function (error) {
+                console.log('Request failed', error)
+            });
+    }
+
+    //componentDidMount() {
+    //    this.loadLoggedUser();
+    //}
+
+    handleChange(event) {
+        const propertyName = event.target.name;
+        const propertyValue = event.target.value;
+
+        const offer = this.state.offerForEdit;
+
+        offer[propertyName] = propertyValue;
+
+        this.setState(
+            {
+                offerForEdit: offer
             }
-        });
-    };
-
+        )
+    }
 
     render() {
 
+        const location = this.props.location.pathname;
 
-        const offer = this.props.offer;
+        let offerForEdit = this.state.offerForEdit;
 
 
-        //const userName = this.props.showModalSignUp ? <label>
-        //    User Name:
-        //    <input type="text" value={this.props.loggedUser.name}
-        //           onChange={this.props.handleUserNameChange}/>
-        //</label> : "";
+        if (location == '/createoffer') {
+            if (!offerForEdit) {
+                offerForEdit = {};
+
+                this.setState(
+                    {
+                        offerForEdit: offerForEdit
+                    }
+                );
+                return "";
+            }
+        } else {
+            if (!offerForEdit) {
+                offerForEdit = {};
+                const offerId = location.subString('/editoffer/');
+                this.loadOffer(offerId);
+                return "";
+            }
+        }
 
         return (
             <div className="OfferModalStyleee display-block">
                 <section className="modal-main">
-                    <p> This is paragraph in the modal</p>
-
-
                     <label>
                         Offer Name:
-                        <input type="text" value={this.props.offer.name}
-                               onChange={this.handleOfferNameChange}/>
+                        <input type="text"
+                               name="title"
+                               value={offerForEdit.name}
+                               onChange={this.handleChange}/>
                     </label>
+                    <br/>
+                    <br/>
 
                     <label>
                         Description:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
+                        <input type="text"
+                               name="description"
+                               value={offerForEdit.description}
+                               onChange={this.handleChange}/>
                     </label>
+                    <br/>
+                    <br/>
 
                     <label>
-                        Location:
-                        <input type="text" value={this.props.offer.location}
-                               onChange={this.handleOfferLocationChange}/>
+                        Phone Number:
+                        <input type="text"
+                               name="phoneNumber"
+                               value={offerForEdit.phoneNumber}
+                               onChange={this.handleChange}/>
                     </label>
+                    <br/>
+                    <br/>
 
 
                     <label>
                         Price:
-                        <input type="text" value={this.props.offer.price}
-                               onChange={this.handleOfferPriceChange}/>
+                        <input type="text"
+                               name="price"
+                               value={offerForEdit.price}
+                               onChange={this.handleChange}/>
                     </label>
 
+                    <br/>
+                    <br/>
 
-                    <button onClick={this.props.hideOfferModal}>Close</button>
-                    <button onClick={this.saveOffer}>Save</button>
+
+                    <Link to="/">Close</Link>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <Link to="/" onClick={this.saveOffer}>Save</Link>
 
                 </section>
             </div>

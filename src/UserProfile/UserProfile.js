@@ -1,99 +1,62 @@
 import React from 'react';
 import './UserProfile.css';
 import OfferElement from '../OfferElement/OfferElement';
-import OfferModal from '../OfferModal/OfferModal';
+import AuthenticationService from '../service/AuthenticationService';
+import axios from 'axios'
+import { Link } from 'react-router-dom'
+
 
 class UserProfile extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            showOfferModal: false,
-            offerForEdit: {}
+            loggedUser: null
         };
-        this.openOfferModal = this.openOfferModal.bind(this);
-        this.hideOfferModal = this.hideOfferModal.bind(this);
-        this.saveOfferModal = this.saveOfferModal.bind(this);
+        this.loadLoggedUser = this.loadLoggedUser.bind(this);
     }
 
 
-    openOfferModal = (offer) => {
-        this.setState({showOfferModal: true});
-        this.setState({offerForEdit: offer});
-    };
+    loadLoggedUser() {
 
+        const userName = AuthenticationService.getLoggedInUserName();
 
-    openNewOfferModal = () => {
-        this.setState({showOfferModal: true});
-        this.setState({offerForEdit: {}});
-    };
+        const url = 'http://localhost:8080/api/userEs/search/findByUserName?name=' + userName;
 
+        axios.get(url)
+            .then((jsonData) => {
 
-    hideOfferModal = () => {
-        this.setState({showOfferModal: false});
-        this.setState({offerForEdit: {}});
-    };
+                this.setState({loggedUser: jsonData.data});
+                //console.log(jsonStr);
+            }).catch(function (error) {
+                console.log('Request failed', error)
+            });
+    }
 
-    saveOfferModal = () => {
-        this.setState({showOfferModal: false});
-
-        //alert("ofer Saved" + offer.name);
-
-
-        this.setState({offerForEdit: {}});
-    };
-
-    deleteOffer = () => {
-        //alert("ofer Deleted" + offer.name);
-    };
+    componentDidMount() {
+        this.loadLoggedUser();
+    }
 
 
     render() {
-        let offerModal = '';
-        if (this.state.showOfferModal) {
-            offerModal = <OfferModal offer={this.state.offerForEdit}
-                                     hideOfferModal={this.hideOfferModal}
-                                     saveOfferModal={this.saveOfferModal}
-                />
+        const loadedUser = this.state.loggedUser;
+
+        if (!loadedUser) {
+            return "";
         }
 
-        let loadedUser = this.props.loadedUser;
-
-        const machinesList = loadedUser.machinesForRent.map((m) =>
-                <li key={m.id}>
-                    <OfferElement offer={m}
-                                  openOfferModal={this.openOfferModal}
-                                  deleteOffer={this.deleteOffer}/>
-                </li>
-        );
-        const servicesList = loadedUser.offeringServices.map((s) =>
-                <li key={s.id}>
-                    <OfferElement offer={s}
-                                  openOfferModal={this.openOfferModal}
-                                  deleteOffer={this.deleteOffer}/>
-                </li>
-        );
-
-        const projectRequestsList = loadedUser.projectRequests.map((p) =>
-                <li key={p.id}>
-                    <OfferElement offer={p}
-                                  openOfferModal={this.openOfferModal}
-                                  deleteOffer={this.deleteOffer}/>
-                </li>
-        );
-
+        const offerList = loadedUser._embedded.offerEList.map((m) =><li key={m.id}><OfferElement offer={m}/></li>);
 
         return (
             <div>
                 <h1> This is your user profile </h1>
 
-                <p>Name: {loadedUser.name}</p>
+                <p>Name: {loadedUser.firstName}</p>
 
-                <p>Surname: {loadedUser.surname}</p>
-                <ul>{machinesList}</ul>
-                <ul>{servicesList}</ul>
-                <ul>{projectRequestsList}</ul>
-                {offerModal}
+                <p>Surname: {loadedUser.lastName}</p>
+                <ul>{offerList}</ul>
+
+                <Link to="/createoffer">Add new Offer</Link>
             </div>
         );
 
