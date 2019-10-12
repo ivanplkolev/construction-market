@@ -1,46 +1,72 @@
 import React from 'react';
 import './Events.css';
-
+import AuthenticationService from '../service/AuthenticationService';
+import axios from 'axios'
 import Calendar from '../Calendar/Calendar';
 
 class Events extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loggedUser: null
+        };
+        this.loadLoggedUser = this.loadLoggedUser.bind(this);
+    }
+
+    loadLoggedUser(userName) {
+
+        const url = 'http://localhost:8080/api/userEs/search/findByUserName?name=' + userName + '&projection=userWithHisOffers';
+
+        axios.get(url)
+            .then((jsonData) => {
+
+                this.setState({loggedUser: jsonData.data});
+
+
+                axios.get(url)
+                    .then((jsonData) => {
+
+                        this.setState({loggedUser: jsonData.data});
+                        //console.log(jsonStr);
+                    }).catch(function (error) {
+                        console.log('Request failed', error)
+                    });
+                //console.log(jsonStr);
+            }).catch(function (error) {
+                console.log('Request failed', error)
+            });
+    }
+
+    //componentDidMount() {
+    //    this.loadLoggedUser();
+    //}
 
     render() {
-        let loadedUser = this.props.loadedUser;
+        const loadedUser = this.state.loggedUser;
 
-
-
-        if(!loadedUser){
-            return '';
+        if (!loadedUser) {
+            const userName = AuthenticationService.getLoggedInUserName();
+            if (userName) {
+                this.loadLoggedUser(userName);
+            }
+            return "";
         }
 
-        const projectEvents = loadedUser.projectRequests.flatMap(p => p.events);
-
-        const offeringServices = loadedUser.offeringServices.flatMap(s => s.events);
-
-        const machinesForRentList = loadedUser.machinesForRent.map(m =>
-                <div>
-                    <h6>{m.name}</h6>
-                    <Calendar events={m.events}/>
-                </div>
-        );
+        if (!loadedUser.eventsList) {
+            return "";
+        }
 
         return (
+
             <div >
                 <div >
                     <h5  >My Projects</h5>
-                    <Calendar events={projectEvents}/>
-                </div>
-                <div >
-                    <h5>My Services</h5>
-                    <Calendar events={offeringServices}/>
-                </div>
-                <div >
-                    <h5>My Machines for rent</h5>
-                    {machinesForRentList}
+                    <Calendar events={loadedUser.eventsList}/>
                 </div>
             </div>
-        );
+        )
+            ;
 
     }
 }

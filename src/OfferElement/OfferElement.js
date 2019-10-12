@@ -1,5 +1,7 @@
 import React from 'react';
 import './OfferInElement.css';
+import {Link} from 'react-router-dom'
+
 
 class OfferElement extends React.Component {
 
@@ -24,10 +26,6 @@ class OfferElement extends React.Component {
             .catch(function (error) {
                 console.log('Request failed', error)
             });
-    };
-
-    handleMakeAgreement = () => {
-        this.props.showAgreementModal(this.props.offer);
     };
 
 
@@ -56,7 +54,9 @@ class OfferElement extends React.Component {
                             {offer.description}
                         </td>
                         <td >
-                            <button className="buttonAgreement" onClick={this.handleMakeAgreement}>Agreement</button>
+                            <Link to={`/offer/${offer.title}`}>
+                                <button className="buttonEvent">View The Offer</button>
+                            </Link>
                         </td>
                         <td>
                             <button className="buttonCool" onClick={this.handleDelete}>Delete</button>

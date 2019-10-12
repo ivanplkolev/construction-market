@@ -1,5 +1,7 @@
 import React from 'react';
 import './OfferModal.css';
+import CategoryBar from '../SearchBar/CategoryBar';
+
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
@@ -8,22 +10,63 @@ class OfferModal extends React.Component {
         super(props);
 
         this.state = {
+            categoriesTree: '',
             offerForEdit: null
         };
 
         this.loadOffer = this.loadOffer.bind(this)
         this.saveOffer = this.saveOffer.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleChangeImpl = this.handleChangeImpl.bind(this)
+        this.loadCategoriesFromServer = this.loadCategoriesFromServer.bind(this);
+        this.handleCategoriesChange = this.handleCategoriesChange.bind(this);
 
     }
 
+    loadCategoriesFromServer(type) {
+
+        let url = 'http://localhost:8080/api/categoryEs/search/findRoot?type=' + type;
+
+        axios.get(url)
+            .then((jsonData) => {
+                this.setState({categoriesTree: jsonData.data});
+                console.log(jsonData);
+            }).catch(function (error) {
+                console.log('Request failed', error)
+            });
+    }
+
+
+    handleCategoriesChange = (level, selectedVal) => {
+
+        let offerForEditclone = JSON.parse(JSON.stringify(this.state.offerForEdit));
+
+        let oldCategory = offerForEditclone.searchCategory;
+        let newCategory = [];
+
+        for (let i = 0; i < level; i++) {
+            newCategory.push(oldCategory[i]);
+        }
+
+        newCategory.push(selectedVal);
+
+        offerForEditclone.searchCategory = newCategory;
+
+
+        this.setState({offerForEdit: offerForEditclone});
+    };
+
 
     saveOffer = () => {
-        const url = 'http://localhost:8080/api/offerEs';
+        const url = 'http://localhost:8080/api/savehelper/offerEs';
+        //const url = 'http://localhost:8080/api/offerEs';
 
         const offer = this.state.offerForEdit;
-        var postdata = new URLSearchParams();
-        postdata.append('offer', offer);
+
+        offer.categoryE = {id: parseInt(offer.searchCategory[offer.searchCategory.length - 1])};
+
+        //var postdata = new URLSearchParams();
+        //postdata.append('offer', offer);
 
         if (this.props.location.pathname == '/createoffer') {
             return axios.post(url, offer);
@@ -45,13 +88,12 @@ class OfferModal extends React.Component {
             });
     }
 
-    //componentDidMount() {
-    //    this.loadLoggedUser();
-    //}
+    componentDidMount() {
+        //    this.loadLoggedUser();
+        this.loadCategoriesFromServer(1);
+    }
 
-    handleChange(event) {
-        const propertyName = event.target.name;
-        const propertyValue = event.target.value;
+    handleChangeImpl(propertyName, propertyValue) {
 
         const offer = this.state.offerForEdit;
 
@@ -64,6 +106,106 @@ class OfferModal extends React.Component {
         )
     }
 
+
+    handleChange(event) {
+        const propertyName = event.target.name;
+        const propertyValue = event.target.value;
+
+        this.handleChangeImpl(propertyName, propertyValue);
+    }
+
+
+    renderSubCategoriesFields(category, selectedSubCategory, level) {
+        return <CategoryBar handleCategoriesChange={this.handleCategoriesChange}
+                            handleMinValueInputChange={this.handleParamValueInputChange}
+                            handleMaxValueInputChange={this.handleParamValueInputChange}
+                            handlePredefinedValueInputChange={this.handlePredefinedValueInputChange}
+                            selectedSubCategory={selectedSubCategory}
+                            level={level}
+                            category={category}/>;
+    }
+
+    getCategoriesFields() {
+        if (!this.state.categoriesTree) {
+            return [];
+        }
+
+        let renderedCategories = [];
+        let selectedCategories = this.state.offerForEdit.searchCategory;
+        let subCategoryToShow = this.state.categoriesTree;
+
+        renderedCategories.push(this.renderSubCategoriesFields(subCategoryToShow, selectedCategories[0], 0));
+
+        const selectedCategiresSize = selectedCategories.length;
+
+        for (let i = 0; i < selectedCategiresSize; i++) {
+            const hasSelectedSubCategory = selectedCategiresSize > i + 1;
+            const selectedSubcategoryId = hasSelectedSubCategory ? selectedCategories[i + 1] : '';
+            const selectedCategoryId = selectedCategories[i];
+            const subcategoriesList = subCategoryToShow._embedded ?
+                subCategoryToShow._embedded.subCategories : subCategoryToShow.subCategories;
+            for (let j = 0; j < subcategoriesList.length; j++) {
+                if (selectedCategoryId == subcategoriesList[j].id) {
+                    subCategoryToShow = subcategoriesList[j];
+                    break;
+                }
+            }
+
+            renderedCategories.push(this.renderSubCategoriesFields(subCategoryToShow, selectedSubcategoryId, i + 1));
+        }
+
+        return renderedCategories;
+    }
+
+
+    setOffersType(event) {
+        //console.log(event.target.value);
+
+        this.state.offerForEdit.type = event.target.value;
+
+        //this.setState({searchType: event.target.value});
+
+
+        this.loadCategoriesFromServer(event.target.value);
+    }
+
+    handleParamValueInputChange = (id, value) => {
+        let list = this.state.offerForEdit.offerParamEList;
+        let paramId = id.substr(4);
+        let found = false;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].reference.id == paramId) {
+                list[i].value = value;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            let newOfferParam = {reference: {id: paramId}, value: value};
+            list.push(newOfferParam);
+        }
+    };
+
+
+    handlePredefinedValueInputChange = (id, value) => {
+        let list = this.state.offerForEdit.predefinedOfferParamEList;
+        let paramId = id.substr(4);
+        let found = false;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].reference.id == paramId) {
+                list[i].predefinedValuesE = {id: value};
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            let newPredefinedOfferParam = {reference: {id: paramId}, predefinedValuesE: {id: value}};
+            list.push(newPredefinedOfferParam);
+        }
+    };
+
     render() {
 
         const location = this.props.location.pathname;
@@ -74,6 +216,10 @@ class OfferModal extends React.Component {
         if (location == '/createoffer') {
             if (!offerForEdit) {
                 offerForEdit = {};
+                offerForEdit.searchCategory = [];
+                offerForEdit.predefinedOfferParamEList = [];
+                offerForEdit.offerParamEList = [];
+                //offerForEdit.searchType =1;
 
                 this.setState(
                     {
@@ -91,9 +237,21 @@ class OfferModal extends React.Component {
             }
         }
 
+        const categoriesDiv = <div>
+            {this.getCategoriesFields()}
+        </div>;
+
+
         return (
             <div className="OfferModalStyleee display-block">
                 <section className="modal-main">
+
+                    <div onChange={this.setOffersType.bind(this)}>
+                        <input type="radio" value="1" name="offeeTypeSearch"/> Services
+                        <input type="radio" value="2" name="offeeTypeSearch"/> Machines
+                        <input type="radio" value="3" name="offeeTypeSearch"/> Projects
+                    </div>
+
                     <label>
                         Offer Name:
                         <input type="text"
@@ -101,6 +259,12 @@ class OfferModal extends React.Component {
                                value={offerForEdit.name}
                                onChange={this.handleChange}/>
                     </label>
+                    <br/>
+                    <br/>
+
+                    {categoriesDiv}
+
+
                     <br/>
                     <br/>
 

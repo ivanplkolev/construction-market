@@ -1,115 +1,169 @@
 import React from 'react';
 import './Agreement.css';
 
+import axios from 'axios'
+import { Link } from 'react-router-dom'
+
 class Agreement extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            offerForEdit: {}
+            agrrementForEdit: null
         };
+
+        this.loadAgreement = this.loadAgreement.bind(this);
+        this.saveAgreement = this.saveAgreement.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleDetailChange = this.handleDetailChange.bind(this);
+        this.addNewDetailRow = this.addNewDetailRow.bind(this);
+
+    }
+
+    loadAgreement(offerId) {
+        const url = 'http://localhost:8080/api/offerEs/search/findbyId?id=' + offerId;
+
+        axios.get(url)
+            .then((jsonData) => {
+                this.setState({agrrementForEdit: jsonData.data});
+                //console.log(jsonStr);
+            }).catch(function (error) {
+                console.log('Request failed', error)
+            });
     }
 
 
-    saveOffer = () => {
-        this.props.saveOfferModal(this.state.offer);
-    };
+    handleChange(event) {
+        const propertyName = event.target.name;
+        const propertyValue = event.target.value;
 
+        const agreement = this.state.agrrementForEdit;
 
-    handleOfferNameChange = (event) => {
-        const userName = this.state.loggedUser.name;
-        const email = event.target.value;
-        const pass = this.state.loggedUser.password;
-        this.setState({
-            loggedUser: {
-                name: userName,
-                email: email,
-                password: pass
+        agreement[propertyName] = propertyValue;
+
+        this.setState(
+            {
+                agrrementForEdit: agreement
             }
-        });
+        )
+    }
+
+    saveAgreement = () => {
+        const url = 'http://localhost:8080/api/AgreementEs';
+
+        const agreement = this.state.agrrementForEdit;
+
+        return axios.post(url, agreement);
     };
+
+
+    handleDetailChange(event) {
+        const detailNumber = event.target.name;
+        const propertyValue = event.target.value;
+        const propertyType = event.target.type;
+        const agreement = this.state.agrrementForEdit;
+
+        const detail = agreement.agreementDetailEList.filter(obj => {
+            return obj.number == detailNumber;
+        });
+
+        detail[propertyType] = propertyValue;
+
+        this.setState(
+            {
+                agrrementForEdit: agreement
+            }
+        )
+    }
+
+
+    addNewDetailRow() {
+        const agreement = this.state.agrrementForEdit;
+
+        const newNumber = agreement.agreementDetailEList.length + 1;
+
+        agreement.agreementDetailEList.push({number: newNumber});
+
+        this.setState(
+            {
+                agrrementForEdit: agreement
+            }
+        )
+    }
 
 
     render() {
+        const location = this.props.location.pathname;
+        let agreement = this.state.agrrementForEdit;
+        if (!agreement) {
+            const agreementTitle = location.substr(location.indexOf('createAgreement/') + 'createAgreement/'.length);
+            this.loadAgreement(agreementTitle);
+            return "";
+        }
 
 
-        const offer = this.props.offer;
+        let details = agreement.agreementDetailEList.map((d) => {
+            return <tr>
+                <td>
+                    {d.number}
+                </td>
+                <td>
+                    <input type="text" value={d.description} name={d.number} type="description"
+                           onChange={this.handleDetailChange}/>
+                </td>
+                <td>
+                    <input type="text" value={d.price} name={d.number} type="price" onChange={this.handleDetailChange}/>
+                </td>
+            </tr>
+        });
+
 
         return (
-            <div className="OfferModalStyleee display-block">
-                <section className="modal-main">
-                    <p> This is paragraph in the modal</p>
+            <div >
+
+                <label>
+                    Agreement Title:
+                    <input type="text" value={agreement.title} onChange={this.handleChange}/>
+                </label>
+
+                <label>
+                    Agreement Title:
+                    <input type="text" value={agreement.title} onChange={this.handleChange}/>
+                </label>
+
+                <table>
+                    <th>
+                        <td></td>
+                        <td>
+                            Description
+                        </td>
+                        <td>
+                            Price
+                        </td>
+                    </th>
 
 
-                    <label>
-                        Offer Name:
-                        <input type="text" value={this.props.offer.name}
-                               onChange={this.handleOfferNameChange}/>
-                    </label>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="text" onChange={this.addNewDetailRow}/>
+                        </td>
+                        <td>
+                            <input type="text" onChange={this.addNewDetailRow}/>
+                        </td>
+                    </tr>
 
-                    <label>
-                        Description:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-                    <label>
-                        Location:
-                        <input type="text" value={this.props.offer.location}
-                               onChange={this.handleOfferLocationChange}/>
-                    </label>
+                </table>
 
 
-                    <label>
-                        Price:
-                        <input type="text" value={this.props.offer.price}
-                               onChange={this.handleOfferPriceChange}/>
-                    </label>
+                <Link to="/">Close</Link>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
 
-                    <label>
-                        Description Of the Agreement:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
+                <Link to="/" onClick={this.saveAgreement}>Save</Link>
 
-                    <label>
-                        Price Of the Agreement:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-
-                    <h6> Subprices:  </h6>
-
-                    <label>
-                        Description Of the Agreement subpart 1:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-                    <label>
-                        Price Of the Agreement subpart 1:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-                    <label>
-                        Description Of the Agreement subpart 2:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-                    <label>
-                        Price Of the Agreement subpart 2:
-                        <input type="text" value={this.props.offer.description}
-                               onChange={this.handleOfferDescriptionChange}/>
-                    </label>
-
-
-                    <button onClick={this.props.hideOfferModal}>Close</button>
-                    <button onClick={this.saveOffer}>Send Request</button>
-
-                </section>
             </div>
         );
 

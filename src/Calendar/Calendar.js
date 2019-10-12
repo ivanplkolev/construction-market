@@ -40,9 +40,7 @@ export default class Calendar extends React.Component {
         const daysInMonth = [];
 
 
-        const eventsDays = this.props.events.map((d) =>
-                new Date(d.date).getDate()
-        );
+        const eventsDays = this.props.events.map((d) => new Date(d.fromDate).getDate());//todo filter by month
 
 
         for (let d = 1; d <= daysInCurrentMonth; d++) {

@@ -6,6 +6,9 @@ import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
 import UserProfile from "../UserProfile/UserProfile";
 import OfferModal from "../OfferModal/OfferModal";
+import OfferExtended from "../OfferExtended/OfferExtended";
+import Agreement from "../Agreement/Agreement";
+import Event from "../Event/Event";
 import './Layout.css';
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -181,6 +184,9 @@ class Layout extends React.Component {
                             <Switch>
                                 <Route path="/" exact component={SearchPage} />
                                 <Route path="/login" exact component={ModalLogIn} />
+                                <Route path="/offer" component={OfferExtended} />
+                                <Route path="/createEvent/" component={Event} />
+                                <Route path="/event/" component={Event} />
                                 <AuthenticatedRoute path="/profile" exact component={UserProfile} />
                                 <AuthenticatedRoute path="/createoffer" exact component={OfferModal} />
                                 <AuthenticatedRoute path="/editoffer" component={OfferModal} />
@@ -188,7 +194,9 @@ class Layout extends React.Component {
 
                         </td>
                         <td class="rightSside">
-                            <Events loadedUser={this.state.loadedUser}/>
+                            <Switch>
+                                <Route path="/" component={Events} />
+                            </Switch>
                         </td>
                     </tr>
                     </tbody>

@@ -1,42 +1,41 @@
 import React from 'react';
 import './Offers.css';
 import OfferElement from '../OfferElement/OfferElement';
-import Agreement from '../Agreement/Agreement.js';
 
 class Offers extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            isAgreementModalVisible: false,
-            offerForAgreement: {}
-        };
-        this.showAgreementModal = this.showAgreementModal.bind(this);
-        this.hideAgreementModal = this.hideAgreementModal.bind(this);
-        this.saveAgreemet = this.saveAgreemet.bind(this);
+        //this.state = {
+        //    //isAgreementModalVisible: false,
+        //    offerForAgreement: {}
+        //};
+        //this.showAgreementModal = this.showAgreementModal.bind(this);
+        //this.hideAgreementModal = this.hideAgreementModal.bind(this);
+        //this.saveAgreemet = this.saveAgreemet.bind(this);
 
     }
 
 
-    showAgreementModal = (offer) => {
-        this.setState({isAgreementModalVisible: true});
-        this.setState({offerForAgreement: offer});
-    };
+    //showAgreementModal = (offer) => {
+    //    this.setState({isAgreementModalVisible: true});
+    //    this.setState({offerForAgreement: offer});
+    //};
 
 
-    hideAgreementModal = () => {
-        this.setState({isAgreementModalVisible: false});
-        this.setState({offerForAgreement: {}});
-    };
+    //hideAgreementModal = () => {
+    //    this.setState({isAgreementModalVisible: false});
+    //    this.setState({offerForAgreement: {}});
+    //};
 
-    saveAgreemet = () => {
-        this.setState({isAgreementModalVisible: false});
-
-        //alert("ofer Saved" + offer.name);
-
-
-        this.setState({offerForAgreement: {}});
-    };
+    //saveAgreemet = () => {
+    //    this.setState({isAgreementModalVisible: false});
+    //
+    //    //alert("ofer Saved" + offer.name);
+    //
+    //
+    //    this.setState({offerForAgreement: {}});
+    //};
 
 
     render() {
@@ -44,22 +43,19 @@ class Offers extends React.Component {
 
         let offersList = this.props.offerList;
 
-        let agreementModal = '';
-        if (this.state.isAgreementModalVisible) {
-            agreementModal = <Agreement offer={this.state.offerForAgreement}
-                                        hideAgreementModal={this.hideAgreementModal}
-                                        saveAgreemet={this.saveAgreemet}/>
-        }
+        //let agreementModal = '';
+        //if (this.state.isAgreementModalVisible) {
+        //    agreementModal = <Agreement offer={this.state.offerForAgreement}
+        //                                hideAgreementModal={this.hideAgreementModal}
+        //                                saveAgreemet={this.saveAgreemet}/>
+        //}
 
 
-        const listItems = offersList.map((o) =><OfferElement
-            showAgreementModal={this.showAgreementModal}
-            offer={o}/>);
+        const listItems = offersList.map((o) =><OfferElement  offer={o}/>);
         return (
             <div>
                 <h5> Here are the found offers</h5>
                 {listItems}
-                {agreementModal}
             </div>
         );
 
