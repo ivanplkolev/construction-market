@@ -49,7 +49,7 @@ class EventElement extends React.Component {
                         </td>
 
                         <td >
-                            {agreement.title}
+                            {agreement.totalPrice}
 
                         </td>
                     </tr>
