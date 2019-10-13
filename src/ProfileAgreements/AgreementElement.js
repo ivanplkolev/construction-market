@@ -3,7 +3,7 @@ import './ProfileAgreements.css';
 import {Link} from 'react-router-dom'
 
 
-class EventElement extends React.Component {
+class AgreementElement extends React.Component {
 
     //handleDelete = () => {
     //    //this.props.deleteOffer(this.props.offer);
@@ -63,4 +63,4 @@ class EventElement extends React.Component {
     }
 }
 
-export default EventElement;
+export default AgreementElement;
