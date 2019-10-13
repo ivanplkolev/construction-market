@@ -38,8 +38,19 @@ class AgreementElement extends React.Component {
                 </tr>
         );
 
+        let addReviewButton = '';
+        let review = '';
+
+        if (!agreement.review) {
+            <Link to={`/createAgreement/${theEvent.id}`}>
+                <button className="buttonEvent">Add Agreement</button>
+            </Link>
+        } else {
+            review = <FeedBackElement feedback={agreement.review}/>
+        }
 
         return (
+
             <div key={agreement.id}>
                 <table className="offerElement">
                     <tbody>
@@ -58,8 +69,11 @@ class AgreementElement extends React.Component {
 
                     </tbody>
                 </table>
+                {addReviewButton}
+                {review}
             </div>
-        );
+        )
+            ;
     }
 }
 
