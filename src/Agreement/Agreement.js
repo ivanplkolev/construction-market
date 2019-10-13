@@ -12,25 +12,25 @@ class Agreement extends React.Component {
             agrrementForEdit: null
         };
 
-        this.loadAgreement = this.loadAgreement.bind(this);
+        //this.loadOffer = this.loadOffer.bind(this);
         this.saveAgreement = this.saveAgreement.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDetailChange = this.handleDetailChange.bind(this);
-        this.addNewDetailRow = this.addNewDetailRow.bind(this);
+        //this.addNewDetailRow = this.addNewDetailRow.bind(this);
 
     }
 
-    loadAgreement(offerId) {
-        const url = 'http://localhost:8080/api/offerEs/search/findbyId?id=' + offerId;
-
-        axios.get(url)
-            .then((jsonData) => {
-                this.setState({agrrementForEdit: jsonData.data});
-                //console.log(jsonStr);
-            }).catch(function (error) {
-                console.log('Request failed', error)
-            });
-    }
+    //loadOffer(offerId) {
+    //    const url = 'http://localhost:8080/api/offerEs/search/findbyId?id=' + offerId;
+    //
+    //    axios.get(url)
+    //        .then((jsonData) => {
+    //            this.setState({agrrementForEdit: jsonData.data});
+    //            //console.log(jsonStr);
+    //        }).catch(function (error) {
+    //            console.log('Request failed', error)
+    //        });
+    //}
 
 
     handleChange(event) {
@@ -49,40 +49,31 @@ class Agreement extends React.Component {
     }
 
     saveAgreement = () => {
-        const url = 'http://localhost:8080/api/AgreementEs';
 
         const agreement = this.state.agrrementForEdit;
+
+        agreement.agreementDetailEList.length = agreement.agreementDetailEList.length -1;
+
+        const url = 'http://localhost:8080/api/saveHelper/agreementEs';
+        //const url = 'http://localhost:8080/api/AgreementEs';
 
         return axios.post(url, agreement);
     };
 
 
-    handleDetailChange(event) {
-        const detailNumber = event.target.name;
+    handleDetailChange(propertyType, event) {
+        const detailNumber = parseInt(event.target.name);
         const propertyValue = event.target.value;
-        const propertyType = event.target.type;
+        //const propertyType = event.target.type;
         const agreement = this.state.agrrementForEdit;
 
-        const detail = agreement.agreementDetailEList.filter(obj => {
-            return obj.number == detailNumber;
-        });
+        const detail = agreement.agreementDetailEList[detailNumber];
 
         detail[propertyType] = propertyValue;
 
-        this.setState(
-            {
-                agrrementForEdit: agreement
-            }
-        )
-    }
-
-
-    addNewDetailRow() {
-        const agreement = this.state.agrrementForEdit;
-
-        const newNumber = agreement.agreementDetailEList.length + 1;
-
-        agreement.agreementDetailEList.push({number: newNumber});
+        if (detailNumber == agreement.agreementDetailEList.length - 1) {
+            agreement.agreementDetailEList.push({number: detailNumber + 1, price: '', description: ''});
+        }
 
         this.setState(
             {
@@ -90,14 +81,39 @@ class Agreement extends React.Component {
             }
         )
     }
+
+
+    //addNewDetailRow() {
+    //    const agreement = this.state.agrrementForEdit;
+    //
+    //    const newNumber = agreement.agreementDetailEList.length + 1;
+    //
+    //    agreement.agreementDetailEList.push({number: newNumber});
+    //
+    //    this.setState(
+    //        {
+    //            agrrementForEdit: agreement
+    //        }
+    //    )
+    //}
 
 
     render() {
         const location = this.props.location.pathname;
         let agreement = this.state.agrrementForEdit;
         if (!agreement) {
-            const agreementTitle = location.substr(location.indexOf('createAgreement/') + 'createAgreement/'.length);
-            this.loadAgreement(agreementTitle);
+            const eventId = location.substr(location.indexOf('createAgreement/') + 'createAgreement/'.length);
+            //this.loadOffer(offerId);//todo cosider is it needed ?
+
+            this.setState(
+                {
+                    agrrementForEdit: {
+                        parent: {id: eventId},
+                        agreementDetailEList: [{number: 0, price: '', description: ''}]
+                    }
+                }
+            );
+
             return "";
         }
 
@@ -108,11 +124,12 @@ class Agreement extends React.Component {
                     {d.number}
                 </td>
                 <td>
-                    <input type="text" value={d.description} name={d.number} type="description"
-                           onChange={this.handleDetailChange}/>
+                    <input type="text" value={d.description} name={d.number}
+                           onChange={(e) => this.handleDetailChange("description", e)}/>
                 </td>
                 <td>
-                    <input type="text" value={d.price} name={d.number} type="price" onChange={this.handleDetailChange}/>
+                    <input type="text" value={d.price} name={d.number}
+                           onChange={(e) => this.handleDetailChange("price", e)}/>
                 </td>
             </tr>
         });
@@ -121,37 +138,20 @@ class Agreement extends React.Component {
         return (
             <div >
 
-                <label>
-                    Agreement Title:
-                    <input type="text" value={agreement.title} onChange={this.handleChange}/>
-                </label>
-
-                <label>
-                    Agreement Title:
-                    <input type="text" value={agreement.title} onChange={this.handleChange}/>
-                </label>
-
                 <table>
-                    <th>
-                        <td></td>
+                    <tr>
+                        <td>
+                        </td>
+
                         <td>
                             Description
                         </td>
                         <td>
-                            Price
-                        </td>
-                    </th>
-
-
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input type="text" onChange={this.addNewDetailRow}/>
-                        </td>
-                        <td>
-                            <input type="text" onChange={this.addNewDetailRow}/>
+                            Sub Price
                         </td>
                     </tr>
+
+                    {details}
 
                 </table>
 

@@ -58,7 +58,7 @@ class OfferModal extends React.Component {
 
 
     saveOffer = () => {
-        const url = 'http://localhost:8080/api/savehelper/offerEs';
+        const url = 'http://localhost:8080/api/saveHelper/offerEs';
         //const url = 'http://localhost:8080/api/offerEs';
 
         const offer = this.state.offerForEdit;

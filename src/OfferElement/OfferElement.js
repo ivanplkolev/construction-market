@@ -5,11 +5,6 @@ import {Link} from 'react-router-dom'
 
 class OfferElement extends React.Component {
 
-
-    handleEdit = () => {
-        this.props.openOfferModal(this.props.offer);
-    };
-
     handleDelete = () => {
         //this.props.deleteOffer(this.props.offer);
         const url = 'http://localhost:8080/api/offerEs/' + this.props.offer.id;

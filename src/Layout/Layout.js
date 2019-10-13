@@ -9,6 +9,8 @@ import OfferModal from "../OfferModal/OfferModal";
 import OfferExtended from "../OfferExtended/OfferExtended";
 import Agreement from "../Agreement/Agreement";
 import Event from "../Event/Event";
+import ProfileEvents from "../ProfileEvents/ProfileEvents";
+import ProfileAgreements from "../ProfileAgreements/ProfileAgreements.js";
 import './Layout.css';
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -185,9 +187,12 @@ class Layout extends React.Component {
                                 <Route path="/" exact component={SearchPage} />
                                 <Route path="/login" exact component={ModalLogIn} />
                                 <Route path="/offer" component={OfferExtended} />
-                                <Route path="/createEvent/" component={Event} />
-                                <Route path="/event/" component={Event} />
-                                <AuthenticatedRoute path="/profile" exact component={UserProfile} />
+                                <AuthenticatedRoute path="/createEvent/" component={Event} />
+                                <AuthenticatedRoute path="/event/" component={Event} />
+                                <AuthenticatedRoute path="/offers" exact component={UserProfile} />
+                                <AuthenticatedRoute path="/events" exact component={ProfileEvents} />
+                                <AuthenticatedRoute path="/createAgreement" component={Agreement} />
+                                <AuthenticatedRoute path="/agreements" exact component={ProfileAgreements} />
                                 <AuthenticatedRoute path="/createoffer" exact component={OfferModal} />
                                 <AuthenticatedRoute path="/editoffer" component={OfferModal} />
                             </Switch>

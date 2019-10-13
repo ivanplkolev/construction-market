@@ -25,9 +25,11 @@ class NavigationBar extends React.Component {
         const logInButton = isUserLoggedIn ? "" : <Link to="/login">Log In</Link>;
         const signUpButton = isUserLoggedIn ? "" : <Link to="/login">Sign Up</Link>;
         const logOutButton = isUserLoggedIn ? <Link to="/" onClick={this.logoutClicked}>Log Out</Link> : "";
-        const MessagesButton = isUserLoggedIn ? <Link to="/profile">Messages</Link> : "";
-        const ProfileButton = isUserLoggedIn ? <Link to="/profile">My Proffile</Link> : "";
-        const OffersButton = <Link to="/">Offers</Link>;
+        const MessagesButton = isUserLoggedIn ? <Link to="/messages">Messages</Link> : "";
+        const EventsButton = isUserLoggedIn ? <Link to="/events">Events</Link> : "";
+        const AgreementsButton = isUserLoggedIn ? <Link to="/agreements">Agreements</Link> : "";
+        const OffersButton = isUserLoggedIn ? <Link to="/offers">My Offers</Link> : "";
+        const SearchButton = <Link to="/">Search</Link>;
         //const userGreeting = (isUserLoggedIn && this.props.loggedUser.name) ? <span>Hello {this.props.loggedUser.name}</span> : "";
 
         return (
@@ -37,8 +39,10 @@ class NavigationBar extends React.Component {
                 <li className="Main-List">{signUpButton} </li>
                 <li className="Main-List">{logInButton} </li>
                 <li className="Main-List">{MessagesButton} </li>
-                <li className="Main-List">{ProfileButton} </li>
+                <li className="Main-List">{EventsButton} </li>
+                <li className="Main-List">{AgreementsButton} </li>
                 <li className="Main-List">{OffersButton} </li>
+                <li className="Main-List">{SearchButton} </li>
 
             </ul>
         );
