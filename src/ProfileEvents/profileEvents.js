@@ -1,12 +1,12 @@
 import React from 'react';
-import './UserProfile.css';
-import OfferElement from '../OfferElement/OfferElement';
+import './ProfileEvents.css';
+import EventElement from './EventElement';
 import AuthenticationService from '../service/AuthenticationService';
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 
-class UserProfile extends React.Component {
+class ProfileEvents extends React.Component {
     constructor(props) {
         super(props);
 
@@ -21,7 +21,7 @@ class UserProfile extends React.Component {
 
         const userName = AuthenticationService.getLoggedInUserName();
 
-        const url = 'http://localhost:8080/api/userEs/search/findByUserName?name=' + userName;
+        const url = 'http://localhost:8080/api/userEs/search/findByUserName?name=' + userName+ '&projection=userWithHisOffers';
 
         axios.get(url)
             .then((jsonData) => {
@@ -45,22 +45,15 @@ class UserProfile extends React.Component {
             return "";
         }
 
-        const offerList = loadedUser._embedded.offerEList.map((m) =><li key={m.id}><OfferElement offer={m}/></li>);
+        const eventsList = loadedUser.eventsList.map((m) =><li key={m.id}><EventElement theEvent={m}/></li>);
 
         return (
             <div>
-                <h1> This is your user profile </h1>
-
-                <p>Name: {loadedUser.firstName}</p>
-
-                <p>Surname: {loadedUser.lastName}</p>
-                <ul>{offerList}</ul>
-
-                <Link to="/createoffer">Add new Offer</Link>
+                <ul>{eventsList}</ul>
             </div>
         );
 
     }
 }
 
-export default UserProfile;
+export default ProfileEvents;
