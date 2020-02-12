@@ -1,5 +1,5 @@
 import React from 'react';
-import './ProfileAgreements.css';
+import './FeedBack.css';
 
 
 class FeedBackElement extends React.Component {

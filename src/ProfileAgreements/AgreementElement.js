@@ -1,4 +1,5 @@
 import React from 'react';
+import FeedBackElement from '../FeedBack/FeedBackElement';
 import './ProfileAgreements.css';
 import {Link} from 'react-router-dom'
 
@@ -42,11 +43,11 @@ class AgreementElement extends React.Component {
         let review = '';
 
         if (!agreement.review) {
-            <Link to={`/createAgreement/${theEvent.id}`}>
+            review = <Link to={`/createAgreement/${agreement.id}`}>
                 <button className="buttonEvent">Add Agreement</button>
             </Link>
         } else {
-            review = <FeedBackElement feedback={agreement.review}/>
+            review = <FeedBackElement feedBack={agreement.review}/>
         }
 
         return (
