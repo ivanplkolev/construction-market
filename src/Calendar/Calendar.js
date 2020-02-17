@@ -2,14 +2,11 @@ import moment from 'moment'
 
 import React from "react";
 
-import './Calendar.css';
-
-
 export default class Calendar extends React.Component {
 
     render() {
 
-        if(!this.props.events){
+        if (!this.props.events) {
             return '';
         }
 
@@ -23,7 +20,7 @@ export default class Calendar extends React.Component {
 
         const weekdayshortname = weekdayshort.map(day => {
             return (
-                <th key={day} className="week-day">
+                <th class="table-light" key={day}>
                     {day}
                 </th>
             );
@@ -44,16 +41,9 @@ export default class Calendar extends React.Component {
 
 
         for (let d = 1; d <= daysInCurrentMonth; d++) {
-            let dayClass = [];
-            if (d == currentDay) {
-                dayClass.push('today');
-            }
-            if (eventsDays.includes(d)) {
-                dayClass.push('hasEvent');
-            }
             daysInMonth.push(
-                <td key={d} className={dayClass.join(' ')}>
-                    <span >{d}</span>
+                <td key={d} class={eventsDays.includes(d) ? 'table-success' : ''}>
+                    <span class={d == currentDay ? 'badge badge-pill badge-danger' : ''}>{d}</span>
                 </td>);
         }
 
@@ -79,10 +69,10 @@ export default class Calendar extends React.Component {
         });
 
         return (
-            <div className="calendar">
-                <table className="calendarContent">
+            <div>
+                <table class="table">
                     <thead>
-                    <tr>{weekdayshortname}</tr>
+                    <tr class="table-light">{weekdayshortname}</tr>
                     </thead>
                     <tbody>{calendarBody}</tbody>
                 </table>

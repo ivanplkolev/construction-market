@@ -1,5 +1,4 @@
 import React from 'react';
-import './ProfileEvents.css';
 import {Link} from 'react-router-dom'
 
 
@@ -26,35 +25,30 @@ class EventElement extends React.Component {
 
     render() {
         let theEvent = this.props.theEvent;
+        let offer = theEvent.parent;
+
         return (
-            <div key={theEvent.id}>
-                <table className="offerElement">
-                    <tbody>
-                    <tr>
-                        <td colSpan="2">
-                            {theEvent.title}
-                        </td>
 
-                        <td >
-                            <Link to={`/createAgreement/${theEvent.id}`}>
-                                <button className="buttonEvent">Add Agreement</button>
+            <div class="card mb-3" key={theEvent.id}>
+                <div class="row no-gutters">
+                    <div >
+                        <img src={ require('../images/ni_small.jpg') }/>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{theEvent.title}</h5>
+                            <h5 class="card-title"> {theEvent.fromDate} -  {theEvent.toDate}</h5>
+
+                            <Link class="btn btn-primary" to={`/createAgreement/${theEvent.id}`}>
+                                <span >View The Offer</span>
                             </Link>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td >
-                            {theEvent.fromDate}
-                        </td>
-                        <td >
-                            {theEvent.toDate}
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                            <Link class="btn btn-primary" to={`/createAgreement/${theEvent.id}`}>
+                                <span >Add Agreement</span>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div >
         );
     }
 }

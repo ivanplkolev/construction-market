@@ -61,7 +61,7 @@ class Events extends React.Component {
 
             <div >
                 <div >
-                    <h5  >My Projects</h5>
+                    <h5 >My Projects</h5>
                     <Calendar events={loadedUser.eventsList}/>
                 </div>
             </div>

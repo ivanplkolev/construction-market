@@ -31,8 +31,8 @@ class CategoryBar extends React.Component {
 
     handleCategoriesChange = (event) => {
 
-        const selectedVal =  event.target.value;
-        const level =  event.target.id.replace('category_level_', '');
+        const selectedVal = event.target.value;
+        const level = event.target.id.replace('category_level_', '');
 
         this.props.handleCategoriesChange(level, selectedVal);
     };
@@ -44,7 +44,6 @@ class CategoryBar extends React.Component {
 
         this.props.handlePredefinedValueInputChange(id, value);
     };
-
 
 
     render() {
@@ -64,36 +63,40 @@ class CategoryBar extends React.Component {
 
         const optionList = hasSubcategories ? subcategories.map((c) =><option value={c.id}>{c.name}</option>) : '';
 
+        const categoryTitle = hasSubcategories ? 'SubCategory :' : '';
         const categorySelect = hasSubcategories ?
-            <label>
-                SubCategory:
-                <select value={this.props.selectedSubCategory}
-                        onChange={this.handleCategoriesChange}
-                        id={'category_level_'+this.props.level}>
-                    <option value="">All</option>
-                    {optionList}
-                </select>
-            </label> : '';
+            <select class="custom-select"
+                    value={this.props.selectedSubCategory}
+                    onChange={this.handleCategoriesChange}
+                    id={'category_level_'+this.props.level}>
+                <option value="">All</option>
+                {optionList}
+            </select>
+            : '';
+
 
         let parameterInputs = '';
 
         if (category.parameters && category.parameters.length > 0) {
             parameterInputs = category.parameters.map(p =>
                     <tr>
-                        <td className="inpuCell">
+                        <td>
+                            {p.name}
+                        </td>
+                        <td>
                             <label>
-                                Min {p.name}:
-                                <input className="textInput"
+                                Min:
+                                <input class="form-control"
                                        type="text"
                                        id={'min_'+p.id}
                                        value={this.props.searchInputValue}
                                        onChange={this.handleMinValueInputChange}/>
                             </label>
                         </td>
-                        <td className="inpuCell">
+                        <td >
                             <label>
-                                Max {p.name}:
-                                <input className="textInput"
+                                Max:
+                                <input class="form-control"
                                        type="text"
                                        id={'max_'+p.id}
                                        value={this.props.searchInputValue}
@@ -108,10 +111,14 @@ class CategoryBar extends React.Component {
         if (category.predefinedParameters && category.predefinedParameters.length > 0) {
             predefinedParameterInputs = category.predefinedParameters.map(p =>
                     <tr>
-                        <td columnSpan="2">
+                        <td>
+                            {p.name}:
+                        </td>
+                        <td >
                             <label>
-                                {p.name}:
-                                <select onChange={this.handlePredefinedValueInputChange}
+
+                                <select  class="custom-select"
+                                         onChange={this.handlePredefinedValueInputChange}
                                         id={'pre_'+p.id}>
                                     <option value="">All</option>
                                     {p.predefinedValuesEList.map(v =><option value={v.id}>{v.value}</option>) }
@@ -124,20 +131,15 @@ class CategoryBar extends React.Component {
 
 
         return (
-            <div className="categoryDiv">
-                <p> {category.name}  </p>
-                <table className="inpuTable">
+            <div class="alert alert-primary">
+                <table class="table">
                     <tr>
-                        <td className="inpuCell">
-                            {categorySelect}
-                        </td>
-                        <td className="inpuCell">
-                            <table className="inpuTable">
-                                {predefinedParameterInputs}
-                                {parameterInputs}
-                            </table>
-                        </td>
+                        <td width="40%"> <h5>{category.name}</h5></td>
+                        <td width="30%" align="right">{categoryTitle}</td>
+                        <td width="30%">{categorySelect}</td>
                     </tr>
+                    {predefinedParameterInputs}
+                    {parameterInputs}
                 </table>
             </div>
         );

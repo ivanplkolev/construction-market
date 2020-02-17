@@ -1,31 +1,31 @@
 
-.calendar {
-    /*width: 100%;*/
+/*.calendar {*/
+    /*/!*width: 100%;*!/*/
 
-    /*background: red;*/
-    text-align: center;
+    /*/!*background: red;*!/*/
+    /*text-align: center;*/
 
-}
+/*}*/
 
-.calendarContent {
+/*.calendarContent {*/
 
-    /*border: 1px solid black;*/
+    /*/!*border: 1px solid black;*!/*/
 
-    display: inline-table;
+    /*display: inline-table;*/
 
 
-}
+/*}*/
 
-.week-day {
+/*.week-day {*/
 
-}
+/*}*/
 
-.today {
+/*.today {*/
 
-    border: 2px solid black;
-}
+    /*border: 2px solid black;*/
+/*}*/
 
-.hasEvent {
-    background: yellow;
+/*.hasEvent {*/
+    /*background: yellow;*/
 
-}
+/*}*/
