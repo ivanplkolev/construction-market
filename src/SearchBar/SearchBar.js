@@ -4,7 +4,6 @@ import CategoryBar from './CategoryBar';
 import axios from 'axios'
 
 
-
 class SearchBar extends React.Component {
     constructor(props) {
         super(props);
@@ -180,24 +179,43 @@ class SearchBar extends React.Component {
             {this.getCategoriesFields()}
         </div>;
 
-        return (
-            <div>
+        let servicesClass = this.state.searchType == 1 ? "btn btn-primary btn-sm active" : "btn btn-primary btn-sm notActive";
+        let machinesClass = this.state.searchType == 2 ? "btn btn-primary btn-sm active" : "btn btn-primary btn-sm notActive";
+        let projectsClass = this.state.searchType == 3 ? "btn btn-primary btn-sm active" : "btn btn-primary btn-sm notActive";
 
-                <div onChange={this.setOffersType.bind(this)}>
-                    <input type="radio" value="1" name="offeeTypeSearch"/> Services
-                    <input type="radio" value="2" name="offeeTypeSearch"/> Machines
-                    <input type="radio" value="3" name="offeeTypeSearch"/> Projects
+        return (
+            <div class="p-3 mb-2 bg-light text-dark">
+
+                <div id="radioBtn" class="btn-group">
+                    <button class={servicesClass} value="1" onClick={this.setOffersType.bind(this)}>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        Услуги
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </button>
+                    <button class={machinesClass} value="2" onClick={this.setOffersType.bind(this)}>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        Машини
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </button>
+                    <button class={projectsClass} value="3" onClick={this.setOffersType.bind(this)}>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        Проекти
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </button>
                 </div>
 
-                <label>
-                    Search for:
-                    <input type="text"
-                           value={this.state.searchInputValue}
-                           onChange={this.handleSearchFieldChange}/>
-                </label>
-                <button onClick={this.performSearch}>Search</button>
 
                 {categoriesDiv}
+
+                <div class="col-md-3 mb-3 w-75">
+                    <label for="validationTooltip05">Keyword:</label>
+                    <input type="text" class="form-control" id="validationTooltip05"
+                           value={this.state.searchInputValue}
+                           onChange={this.handleSearchFieldChange}/>
+                </div>
+
+                <button class="btn btn-primary mb-2" onClick={this.performSearch}>Search</button>
+
             </div>
         );
 

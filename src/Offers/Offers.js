@@ -53,8 +53,9 @@ class Offers extends React.Component {
 
         const listItems = offersList.map((o) =><OfferElement  offer={o}/>);
         return (
-            <div>
-                <h5> Here are the found offers</h5>
+            <div class="w-75 ">
+                <div class="alert alert-primary" role="alert"> Here are the found offers</div>
+
                 {listItems}
             </div>
         );

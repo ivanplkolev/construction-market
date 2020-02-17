@@ -1,6 +1,6 @@
 import React from 'react';
 import NavigationBar from '../NavigationBar/NavigationBar';
-import ModalLogIn from '../ModalLogIn/ModalLogIn';
+import LogIn from '../LogIn/LogIn';
 import SearchPage from "../SearchPage/SearchPage";
 import Events from "../Events/Events";
 import Messenger from "../Messenger/Messenger";
@@ -162,50 +162,29 @@ class Layout extends React.Component {
 
         return (
             <Router >
-                <div className="navbar">
-                    <NavigationBar myDataProp={this.state.data}
-                                   updateStateProp={this.updateState}
-                                   openLogInModal={this.openLogInModal}
-                                   openSignUpModal={this.openSignUpModal}
-                                   logOut={this.logOut}
-                                   openMessenger={this.openMessenger}
-                                   openMyProfile={this.openMyProfile}
-                                   openSearchOffers={this.openSearchOffers}
-                                   loggedUser={this.state.loggedUser}
-                                   isLoggedIn={this.state.isLoggedIn}/>
-                </div>
+                <NavigationBar myDataProp={this.state.data}
+                               updateStateProp={this.updateState}
+                               openLogInModal={this.openLogInModal}
+                               openSignUpModal={this.openSignUpModal}
+                               logOut={this.logOut}
+                               openMessenger={this.openMessenger}
+                               openMyProfile={this.openMyProfile}
+                               openSearchOffers={this.openSearchOffers}
+                               loggedUser={this.state.loggedUser}
+                               isLoggedIn={this.state.isLoggedIn}/>
 
-
-                <table class="container">
-                    <tbody>
-                    <tr>
-                        <td class="leftSide">
-                        </td>
-                        <td class="center">
-
-                            <Switch>
-                                <Route path="/" exact component={SearchPage} />
-                                <Route path="/login" exact component={ModalLogIn} />
-                                <Route path="/offer" component={OfferExtended} />
-                                <AuthenticatedRoute path="/createEvent/" component={Event} />
-                                <AuthenticatedRoute path="/event/" component={Event} />
-                                <AuthenticatedRoute path="/offers" exact component={UserProfile} />
-                                <AuthenticatedRoute path="/events" exact component={ProfileEvents} />
-                                <AuthenticatedRoute path="/createAgreement" component={Agreement} />
-                                <AuthenticatedRoute path="/agreements" exact component={ProfileAgreements} />
-                                <AuthenticatedRoute path="/createoffer" exact component={OfferModal} />
-                                <AuthenticatedRoute path="/editoffer" component={OfferModal} />
-                            </Switch>
-
-                        </td>
-                        <td class="rightSside">
-                            <Switch>
-                                <Route path="/" component={Events} />
-                            </Switch>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <Switch >
+                    <Route path="/" exact component={SearchPage}/>
+                    <Route path="/login" exact component={LogIn}/>
+                    <Route path="/offer" component={OfferExtended}/>
+                    <AuthenticatedRoute path="/createEvent/" component={Event}/>
+                    <AuthenticatedRoute path="/offers" exact component={UserProfile}/>
+                    <AuthenticatedRoute path="/events" exact component={ProfileEvents}/>
+                    <AuthenticatedRoute path="/createAgreement" component={Agreement}/>
+                    <AuthenticatedRoute path="/agreements" exact component={ProfileAgreements}/>
+                    <AuthenticatedRoute path="/createoffer" exact component={OfferModal}/>
+                    <AuthenticatedRoute path="/editoffer" component={OfferModal}/>
+                </Switch>
             </Router>
         );
     }
