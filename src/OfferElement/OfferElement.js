@@ -27,39 +27,29 @@ class OfferElement extends React.Component {
     render() {
         let offer = this.props.offer;
         return (
-            <div key={offer.id}>
-                <table className="offerElement">
-                    <tbody>
-                    <tr>
-                        <td rowSpan="2">
-                            <img src={ require('../images/ni_small.jpg') }/>
-                        </td>
-                        <td >
-                            {offer.title}
-                        </td>
-                        <td >
-                            {offer.phoneNumber}
-                        </td>
-                        <td >
-                            <button className="buttonCool" onClick={this.handleEdit}>Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td >
-                            {offer.description}
-                        </td>
-                        <td >
-                            <Link to={`/offer/${offer.title}`}>
-                                <button className="buttonEvent">View The Offer</button>
+            <div class="card mb-3" key={offer.id}>
+                <div class="row no-gutters">
+                    <div >
+                        <img src={ require('../images/ni_small.jpg') }/>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{offer.title}</h5>
+
+                            <p class="card-text">{offer.description}</p>
+
+                            <p class="card-text">
+                                <small class="text-muted">{offer.phoneNumber}</small>
+                            </p>
+                            <button class="btn btn-primary" onClick={this.handleDelete}>Delete</button>
+                            <button class="btn btn-primary" onClick={this.handleEdit}>Edit</button>
+                            <Link class="btn btn-primary" to={`/offer/${offer.title}`}>
+                                <span >View The Offer</span>
                             </Link>
-                        </td>
-                        <td>
-                            <button className="buttonCool" onClick={this.handleDelete}>Delete</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </div>
+                    </div>
+                </div>
+            </div >
         );
     }
 }

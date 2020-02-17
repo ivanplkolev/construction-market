@@ -1,36 +1,36 @@
 
-.Main-List {
-    /*display: inline;*/
-    /*color: whitesmoke;*/
+/*.Main-List {*/
+    /*/!*display: inline;*!/*/
+    /*/!*color: whitesmoke;*!/*/
 
-    list-style-type: none;
-    margin: 10px;
-    padding: 0px;
+    /*list-style-type: none;*/
+    /*margin: 10px;*/
+    /*padding: 0px;*/
 
-    overflow: hidden;
-    background-color: #8fe89d;
+    /*overflow: hidden;*/
+    /*background-color: #8fe89d;*/
 
-    color: #880000;
+    /*color: #880000;*/
 
-    height: 40px;
-}
+    /*height: 40px;*/
+/*}*/
 
-li:first-child {
-    float: left;
-}
+/*li:first-child {*/
+    /*float: left;*/
+/*}*/
 
-li {
-    float: right;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 24px 26px;
-    margin: 20px;
-    text-decoration: none;
-    height: 100%;
-}
+/*li {*/
+    /*float: right;*/
+    /*display: block;*/
+    /*color: white;*/
+    /*text-align: center;*/
+    /*padding: 24px 26px;*/
+    /*margin: 20px;*/
+    /*text-decoration: none;*/
+    /*height: 100%;*/
+/*}*/
 
-/* Change the link color to #111 (black) on hover */
-li a:hover {
-    background-color: #18774b;
-}
+/*/!* Change the link color to #111 (black) on hover *!/*/
+/*li a:hover {*/
+    /*background-color: #18774b;*/
+/*}*/
